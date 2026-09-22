@@ -97,6 +97,9 @@ flowchart LR
 Copy `.env.example` to `.env`:
 
 ```env
+# Environment
+NODE_ENV="development"
+
 # Gemini API Key for agent tool action formulation
 GEMINI_API_KEY="your_gemini_api_key_here"
 
@@ -128,6 +131,99 @@ Visit: `http://localhost:3000`
 cd backend
 pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
+```
+
+---
+
+## 🚀 Deployment
+
+### Option 1: Vercel (Recommended for Frontend)
+
+1. **Install Vercel CLI:**
+   ```bash
+   npm install -g vercel
+   ```
+
+2. **Deploy:**
+   ```bash
+   vercel
+   ```
+
+3. **Set Environment Variables** in Vercel dashboard:
+   - `GEMINI_API_KEY`
+   - `MOSS_API_KEY` (optional)
+   - `MOSS_ENDPOINT`
+   - `MOSS_COLLECTION`
+
+### Option 2: Railway (Full Stack)
+
+1. **Install Railway CLI:**
+   ```bash
+   npm install -g @railway/cli
+   railway login
+   ```
+
+2. **Initialize and Deploy:**
+   ```bash
+   railway init
+   railway up
+   ```
+
+3. **Add Environment Variables** in Railway dashboard
+
+### Option 3: Docker Deployment
+
+1. **Create Dockerfile** (if not present):
+   ```dockerfile
+   FROM node:20-alpine
+   WORKDIR /app
+   COPY package*.json ./
+   RUN npm install
+   COPY . .
+   RUN npm run build
+   EXPOSE 3000
+   CMD ["npm", "start"]
+   ```
+
+2. **Build and Run:**
+   ```bash
+   docker build -t guardmoss .
+   docker run -p 3000:3000 --env-file .env guardmoss
+   ```
+
+### Option 4: Manual VPS Deployment
+
+1. **Build the project:**
+   ```bash
+   npm run build
+   ```
+
+2. **Start production server:**
+   ```bash
+   npm start
+   ```
+
+3. **Use PM2 for process management:**
+   ```bash
+   npm install -g pm2
+   pm2 start dist/server.cjs --name guardmoss
+   pm2 startup
+   pm2 save
+   ```
+
+4. **Set up Nginx reverse proxy** (optional) for SSL and domain
+
+### Environment Variables for Production
+
+Make sure to set these in your deployment platform:
+
+```env
+NODE_ENV=production
+GEMINI_API_KEY=your_production_gemini_key
+MOSS_API_KEY=your_moss_api_key
+MOSS_ENDPOINT=https://api.moss.security/v1
+MOSS_COLLECTION=guardmoss-security-policies
+MOSS_TIMEOUT_MS=250
 ```
 
 ---

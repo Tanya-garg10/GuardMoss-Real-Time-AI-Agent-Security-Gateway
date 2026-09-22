@@ -1,0 +1,773 @@
+[
+  {
+    "event_id": "evt_gvjap47st_mucynzla",
+    "timestamp": 1790098900465,
+    "request": "Tool execution for database.delete",
+    "proposed_action": {
+      "action": "database.delete",
+      "tool": "database.delete",
+      "resource": "production-db",
+      "destination": null,
+      "user": "Research Agent"
+    },
+    "retrieved_policies": [
+      {
+        "id": "POL-INFRA-003",
+        "title": "Production Resource Protection & Destructive Action Policy",
+        "description": "Production databases, clusters, compute resources, and live storage require elevated multi-party admin permissions for any destructive, dropping, truncation, or deletion operations.",
+        "rule": "IF resource_environment == PRODUCTION AND action IN (delete, drop, truncate, destroy, purge) AND permission < ELEVATED_ADMIN THEN BLOCK",
+        "category": "INFRASTRUCTURE_PROTECTION",
+        "sensitivity_level": "CRITICAL",
+        "relevance_score": 0.443,
+        "keywords": [
+          "delete",
+          "drop",
+          "production",
+          "prod",
+          "database",
+          "destroy",
+          "truncate",
+          "purge",
+          "cluster",
+          "destructive"
+        ]
+      },
+      {
+        "id": "POL-PUB-004",
+        "title": "Public Catalog & Read-Only Data Access Policy",
+        "description": "Public catalog data, published documentation, read-only listings, and non-sensitive reference materials can be read and inspected normally by standard automated agents.",
+        "rule": "IF resource_scope == PUBLIC AND action IN (read, get, list, search, inspect) THEN ALLOW",
+        "category": "ACCESS_CONTROL",
+        "sensitivity_level": "PUBLIC",
+        "relevance_score": 0.443,
+        "keywords": [
+          "public",
+          "read",
+          "catalog",
+          "products",
+          "documentation",
+          "list",
+          "search",
+          "inspect",
+          "open",
+          "view"
+        ]
+      },
+      {
+        "id": "POL-DLP-002",
+        "title": "External Data Sharing & Exfiltration Prevention Policy",
+        "description": "Sensitive customer or enterprise data cannot be transmitted, uploaded, or shared to external destinations or third-party email domains without explicit human authorization.",
+        "rule": "IF data_classification == SENSITIVE AND destination != INTERNAL_TRUSTED THEN REQUIRE_APPROVAL",
+        "category": "DATA_LOSS_PREVENTION",
+        "sensitivity_level": "CRITICAL",
+        "relevance_score": 0.31,
+        "keywords": [
+          "send",
+          "external",
+          "gmail",
+          "email",
+          "upload",
+          "share",
+          "exfiltration",
+          "transfer",
+          "export",
+          "third-party"
+        ]
+      }
+    ],
+    "decision": "BLOCK",
+    "reason": "BLOCKED: Destructive action 'database.delete' on production resource 'production-db' violates Policy POL-INFRA-003. User 'Research Agent' has role 'AUTOMATED_AGENT', which lacks required privilege 'ELEVATED_ADMIN'.",
+    "permission_result": {
+      "is_permitted": false,
+      "permission_level": "AUTOMATED_AGENT",
+      "required_level": "ELEVATED_ADMIN",
+      "role": "Agent Identity (Research Agent)",
+      "user_id": "Research Agent",
+      "notes": "Destructive production database operations require ELEVATED_ADMIN privilege"
+    },
+    "moss_latency_ms": 1.22,
+    "evaluation_latency_ms": 2.67,
+    "total_latency_ms": 3.89,
+    "status": "BLOCKED",
+    "approved_by": null,
+    "execution_result": null
+  },
+  {
+    "event_id": "evt_8xf2fr7u5_mucyc9wn",
+    "timestamp": 1790098353961,
+    "request": "Tool execution for send_file",
+    "proposed_action": {
+      "action": "send_file",
+      "tool": "file_transfer_gateway",
+      "resource": "customer.csv",
+      "destination": "external@gmail.com",
+      "user": "analyst_agent"
+    },
+    "retrieved_policies": [
+      {
+        "id": "POL-DLP-002",
+        "title": "External Data Sharing & Exfiltration Prevention Policy",
+        "description": "Sensitive customer or enterprise data cannot be transmitted, uploaded, or shared to external destinations or third-party email domains without explicit human authorization.",
+        "rule": "IF data_classification == SENSITIVE AND destination != INTERNAL_TRUSTED THEN REQUIRE_APPROVAL",
+        "category": "DATA_LOSS_PREVENTION",
+        "sensitivity_level": "CRITICAL",
+        "relevance_score": 0.777,
+        "keywords": [
+          "send",
+          "external",
+          "gmail",
+          "email",
+          "upload",
+          "share",
+          "exfiltration",
+          "transfer",
+          "export",
+          "third-party"
+        ]
+      },
+      {
+        "id": "POL-AMB-005",
+        "title": "Ambiguous Context & Fail-Closed Precautionary Policy",
+        "description": "Any proposed tool action targeting unclassified resources, unrecognized endpoints, or operating within ambiguous security context requires human supervisor approval before execution.",
+        "rule": "IF policy_match_confidence < THRESHOLD OR context == AMBIGUOUS THEN REQUIRE_APPROVAL",
+        "category": "PRECAUTIONARY_GUARD",
+        "sensitivity_level": "SENSITIVE",
+        "relevance_score": 0.38,
+        "keywords": [
+          "unknown",
+          "ambiguous",
+          "unclassified",
+          "unrecognized",
+          "override",
+          "custom",
+          "execute",
+          "eval"
+        ]
+      },
+      {
+        "id": "POL-PII-001",
+        "title": "Customer PII Classification Policy",
+        "description": "Customer PII (Personally Identifiable Information such as customer.csv, names, phone numbers, emails, addresses, financial data) is strictly classified as sensitive data.",
+        "rule": "IF resource CONTAINS (customer, pii, user_records, ssn, credentials, credit_card) THEN CLASSIFY_AS SENSITIVE_DATA",
+        "category": "DATA_CLASSIFICATION",
+        "sensitivity_level": "SENSITIVE",
+        "relevance_score": 0.285,
+        "keywords": [
+          "customer",
+          "pii",
+          "csv",
+          "email",
+          "address",
+          "phone",
+          "sensitive",
+          "personal",
+          "user"
+        ]
+      }
+    ],
+    "decision": "REQUIRE_APPROVAL",
+    "reason": "APPROVAL REQUIRED: Proposed transmission of sensitive data resource 'customer.csv' to external destination 'external@gmail.com' triggers Policy POL-PII-001 & POL-DLP-002. Manual operator authorization is mandated before data dispatch.",
+    "permission_result": {
+      "is_permitted": false,
+      "permission_level": "READ_RESTRICTED",
+      "required_level": "ELEVATED_DLP",
+      "role": "Agent Identity (analyst_agent)",
+      "user_id": "analyst_agent",
+      "notes": "Accessing sensitive customer records requires explicit DLP clearance"
+    },
+    "moss_latency_ms": 1,
+    "evaluation_latency_ms": 2.06,
+    "total_latency_ms": 3.06,
+    "status": "PENDING_APPROVAL",
+    "approved_by": null,
+    "execution_result": null
+  },
+  {
+    "event_id": "evt_godvpxdup_mucy8y9h",
+    "timestamp": 1790098198902,
+    "request": "Query the marketing team directory.",
+    "proposed_action": {
+      "action": "read_data",
+      "tool": "directory_reader",
+      "resource": "marketing_team_directory.json",
+      "destination": null,
+      "user": "analyst_agent",
+      "context": "Prompt: Query the marketing team directory."
+    },
+    "retrieved_policies": [
+      {
+        "id": "POL-INFRA-003",
+        "title": "Production Resource Protection & Destructive Action Policy",
+        "description": "Production databases, clusters, compute resources, and live storage require elevated multi-party admin permissions for any destructive, dropping, truncation, or deletion operations.",
+        "rule": "IF resource_environment == PRODUCTION AND action IN (delete, drop, truncate, destroy, purge) AND permission < ELEVATED_ADMIN THEN BLOCK",
+        "category": "INFRASTRUCTURE_PROTECTION",
+        "sensitivity_level": "CRITICAL",
+        "relevance_score": 0.961,
+        "keywords": [
+          "delete",
+          "drop",
+          "production",
+          "prod",
+          "database",
+          "destroy",
+          "truncate",
+          "purge",
+          "cluster",
+          "destructive"
+        ]
+      },
+      {
+        "id": "POL-AMB-005",
+        "title": "Ambiguous Context & Fail-Closed Precautionary Policy",
+        "description": "Any proposed tool action targeting unclassified resources, unrecognized endpoints, or operating within ambiguous security context requires human supervisor approval before execution.",
+        "rule": "IF policy_match_confidence < THRESHOLD OR context == AMBIGUOUS THEN REQUIRE_APPROVAL",
+        "category": "PRECAUTIONARY_GUARD",
+        "sensitivity_level": "SENSITIVE",
+        "relevance_score": 0.961,
+        "keywords": [
+          "unknown",
+          "ambiguous",
+          "unclassified",
+          "unrecognized",
+          "override",
+          "custom",
+          "execute",
+          "eval"
+        ]
+      },
+      {
+        "id": "POL-PUB-004",
+        "title": "Public Catalog & Read-Only Data Access Policy",
+        "description": "Public catalog data, published documentation, read-only listings, and non-sensitive reference materials can be read and inspected normally by standard automated agents.",
+        "rule": "IF resource_scope == PUBLIC AND action IN (read, get, list, search, inspect) THEN ALLOW",
+        "category": "ACCESS_CONTROL",
+        "sensitivity_level": "PUBLIC",
+        "relevance_score": 0.874,
+        "keywords": [
+          "public",
+          "read",
+          "catalog",
+          "products",
+          "documentation",
+          "list",
+          "search",
+          "inspect",
+          "open",
+          "view"
+        ]
+      }
+    ],
+    "decision": "ALLOW",
+    "reason": "ALLOWED: Read action 'read_data' on 'marketing_team_directory.json' complies with Policy POL-PUB-004. Caller identity verified with valid read permissions.",
+    "permission_result": {
+      "is_permitted": true,
+      "permission_level": "READ_RESTRICTED",
+      "required_level": "STANDARD_READ",
+      "role": "Agent Identity (analyst_agent)",
+      "user_id": "analyst_agent",
+      "notes": "Standard read-only or non-destructive access granted"
+    },
+    "moss_latency_ms": 0.5,
+    "evaluation_latency_ms": 1.04,
+    "total_latency_ms": 1.54,
+    "status": "EXECUTED",
+    "approved_by": null,
+    "execution_result": "Action 'read_data' executed successfully on 'marketing_team_directory.json'."
+  },
+  {
+    "event_id": "evt_pheb077md_mucy8tq6",
+    "timestamp": 1790098193024,
+    "request": "Read the public product catalog.",
+    "proposed_action": {
+      "action": "read_data",
+      "tool": "catalog_reader",
+      "resource": "public_product_catalog.json",
+      "destination": null,
+      "user": "analyst_agent",
+      "context": "Prompt: Read the public product catalog."
+    },
+    "retrieved_policies": [
+      {
+        "id": "POL-PUB-004",
+        "title": "Public Catalog & Read-Only Data Access Policy",
+        "description": "Public catalog data, published documentation, read-only listings, and non-sensitive reference materials can be read and inspected normally by standard automated agents.",
+        "rule": "IF resource_scope == PUBLIC AND action IN (read, get, list, search, inspect) THEN ALLOW",
+        "category": "ACCESS_CONTROL",
+        "sensitivity_level": "PUBLIC",
+        "relevance_score": 0.98,
+        "keywords": [
+          "public",
+          "read",
+          "catalog",
+          "products",
+          "documentation",
+          "list",
+          "search",
+          "inspect",
+          "open",
+          "view"
+        ]
+      },
+      {
+        "id": "POL-INFRA-003",
+        "title": "Production Resource Protection & Destructive Action Policy",
+        "description": "Production databases, clusters, compute resources, and live storage require elevated multi-party admin permissions for any destructive, dropping, truncation, or deletion operations.",
+        "rule": "IF resource_environment == PRODUCTION AND action IN (delete, drop, truncate, destroy, purge) AND permission < ELEVATED_ADMIN THEN BLOCK",
+        "category": "INFRASTRUCTURE_PROTECTION",
+        "sensitivity_level": "CRITICAL",
+        "relevance_score": 0.787,
+        "keywords": [
+          "delete",
+          "drop",
+          "production",
+          "prod",
+          "database",
+          "destroy",
+          "truncate",
+          "purge",
+          "cluster",
+          "destructive"
+        ]
+      },
+      {
+        "id": "POL-AMB-005",
+        "title": "Ambiguous Context & Fail-Closed Precautionary Policy",
+        "description": "Any proposed tool action targeting unclassified resources, unrecognized endpoints, or operating within ambiguous security context requires human supervisor approval before execution.",
+        "rule": "IF policy_match_confidence < THRESHOLD OR context == AMBIGUOUS THEN REQUIRE_APPROVAL",
+        "category": "PRECAUTIONARY_GUARD",
+        "sensitivity_level": "SENSITIVE",
+        "relevance_score": 0.699,
+        "keywords": [
+          "unknown",
+          "ambiguous",
+          "unclassified",
+          "unrecognized",
+          "override",
+          "custom",
+          "execute",
+          "eval"
+        ]
+      }
+    ],
+    "decision": "ALLOW",
+    "reason": "ALLOWED: Read action 'read_data' on 'public_product_catalog.json' complies with Policy POL-PUB-004. Caller identity verified with valid read permissions.",
+    "permission_result": {
+      "is_permitted": true,
+      "permission_level": "READ_RESTRICTED",
+      "required_level": "STANDARD_READ",
+      "role": "Agent Identity (analyst_agent)",
+      "user_id": "analyst_agent",
+      "notes": "Standard read-only or non-destructive access granted"
+    },
+    "moss_latency_ms": 1.07,
+    "evaluation_latency_ms": 1.86,
+    "total_latency_ms": 2.93,
+    "status": "EXECUTED",
+    "approved_by": null,
+    "execution_result": "Action 'read_data' executed successfully on 'public_product_catalog.json'."
+  },
+  {
+    "event_id": "evt_ehc3ggiz1_mucxustt",
+    "timestamp": 1790097538673,
+    "request": "Delete the production database.",
+    "proposed_action": {
+      "action": "delete_database",
+      "tool": "database_admin_client",
+      "resource": "production_primary_db",
+      "destination": null,
+      "user": "analyst_agent",
+      "context": "destructive_maintenance"
+    },
+    "retrieved_policies": [
+      {
+        "id": "POL-INFRA-003",
+        "title": "Production Resource Protection & Destructive Action Policy",
+        "description": "Production databases, clusters, compute resources, and live storage require elevated multi-party admin permissions for any destructive, dropping, truncation, or deletion operations.",
+        "rule": "IF resource_environment == PRODUCTION AND action IN (delete, drop, truncate, destroy, purge) AND permission < ELEVATED_ADMIN THEN BLOCK",
+        "category": "INFRASTRUCTURE_PROTECTION",
+        "sensitivity_level": "CRITICAL",
+        "relevance_score": 0.98,
+        "keywords": [
+          "delete",
+          "drop",
+          "production",
+          "prod",
+          "database",
+          "destroy",
+          "truncate",
+          "purge",
+          "cluster",
+          "destructive"
+        ]
+      },
+      {
+        "id": "POL-PUB-004",
+        "title": "Public Catalog & Read-Only Data Access Policy",
+        "description": "Public catalog data, published documentation, read-only listings, and non-sensitive reference materials can be read and inspected normally by standard automated agents.",
+        "rule": "IF resource_scope == PUBLIC AND action IN (read, get, list, search, inspect) THEN ALLOW",
+        "category": "ACCESS_CONTROL",
+        "sensitivity_level": "PUBLIC",
+        "relevance_score": 0.815,
+        "keywords": [
+          "public",
+          "read",
+          "catalog",
+          "products",
+          "documentation",
+          "list",
+          "search",
+          "inspect",
+          "open",
+          "view"
+        ]
+      },
+      {
+        "id": "POL-AMB-005",
+        "title": "Ambiguous Context & Fail-Closed Precautionary Policy",
+        "description": "Any proposed tool action targeting unclassified resources, unrecognized endpoints, or operating within ambiguous security context requires human supervisor approval before execution.",
+        "rule": "IF policy_match_confidence < THRESHOLD OR context == AMBIGUOUS THEN REQUIRE_APPROVAL",
+        "category": "PRECAUTIONARY_GUARD",
+        "sensitivity_level": "SENSITIVE",
+        "relevance_score": 0.713,
+        "keywords": [
+          "unknown",
+          "ambiguous",
+          "unclassified",
+          "unrecognized",
+          "override",
+          "custom",
+          "execute",
+          "eval"
+        ]
+      }
+    ],
+    "decision": "BLOCK",
+    "reason": "BLOCKED: Destructive action 'delete_database' on production resource 'production_primary_db' violates Policy POL-INFRA-003. User 'analyst_agent' has role 'READ_RESTRICTED', which lacks required privilege 'ELEVATED_ADMIN'.",
+    "permission_result": {
+      "is_permitted": false,
+      "permission_level": "READ_RESTRICTED",
+      "required_level": "ELEVATED_ADMIN",
+      "role": "Agent Identity (analyst_agent)",
+      "user_id": "analyst_agent",
+      "notes": "Destructive production database operations require ELEVATED_ADMIN privilege"
+    },
+    "moss_latency_ms": 0.33,
+    "evaluation_latency_ms": 0.38,
+    "total_latency_ms": 0.71,
+    "status": "BLOCKED",
+    "approved_by": null,
+    "execution_result": null
+  },
+  {
+    "event_id": "evt_j7562bk1g_mucxursq",
+    "timestamp": 1790097537339,
+    "request": "Send customer.csv to external@gmail.com.",
+    "proposed_action": {
+      "action": "send_file",
+      "tool": "file_transfer_gateway",
+      "resource": "customer.csv",
+      "destination": "external@gmail.com.",
+      "user": "analyst_agent",
+      "context": "external_data_dispatch"
+    },
+    "retrieved_policies": [
+      {
+        "id": "POL-DLP-002",
+        "title": "External Data Sharing & Exfiltration Prevention Policy",
+        "description": "Sensitive customer or enterprise data cannot be transmitted, uploaded, or shared to external destinations or third-party email domains without explicit human authorization.",
+        "rule": "IF data_classification == SENSITIVE AND destination != INTERNAL_TRUSTED THEN REQUIRE_APPROVAL",
+        "category": "DATA_LOSS_PREVENTION",
+        "sensitivity_level": "CRITICAL",
+        "relevance_score": 0.98,
+        "keywords": [
+          "send",
+          "external",
+          "gmail",
+          "email",
+          "upload",
+          "share",
+          "exfiltration",
+          "transfer",
+          "export",
+          "third-party"
+        ]
+      },
+      {
+        "id": "POL-AMB-005",
+        "title": "Ambiguous Context & Fail-Closed Precautionary Policy",
+        "description": "Any proposed tool action targeting unclassified resources, unrecognized endpoints, or operating within ambiguous security context requires human supervisor approval before execution.",
+        "rule": "IF policy_match_confidence < THRESHOLD OR context == AMBIGUOUS THEN REQUIRE_APPROVAL",
+        "category": "PRECAUTIONARY_GUARD",
+        "sensitivity_level": "SENSITIVE",
+        "relevance_score": 0.845,
+        "keywords": [
+          "unknown",
+          "ambiguous",
+          "unclassified",
+          "unrecognized",
+          "override",
+          "custom",
+          "execute",
+          "eval"
+        ]
+      },
+      {
+        "id": "POL-PII-001",
+        "title": "Customer PII Classification Policy",
+        "description": "Customer PII (Personally Identifiable Information such as customer.csv, names, phone numbers, emails, addresses, financial data) is strictly classified as sensitive data.",
+        "rule": "IF resource CONTAINS (customer, pii, user_records, ssn, credentials, credit_card) THEN CLASSIFY_AS SENSITIVE_DATA",
+        "category": "DATA_CLASSIFICATION",
+        "sensitivity_level": "SENSITIVE",
+        "relevance_score": 0.74,
+        "keywords": [
+          "customer",
+          "pii",
+          "csv",
+          "email",
+          "address",
+          "phone",
+          "sensitive",
+          "personal",
+          "user"
+        ]
+      }
+    ],
+    "decision": "REQUIRE_APPROVAL",
+    "reason": "APPROVAL REQUIRED: Proposed transmission of sensitive data resource 'customer.csv' to external destination 'external@gmail.com.' triggers Policy POL-PII-001 & POL-DLP-002. Manual operator authorization is mandated before data dispatch.",
+    "permission_result": {
+      "is_permitted": false,
+      "permission_level": "READ_RESTRICTED",
+      "required_level": "ELEVATED_DLP",
+      "role": "Agent Identity (analyst_agent)",
+      "user_id": "analyst_agent",
+      "notes": "Accessing sensitive customer records requires explicit DLP clearance"
+    },
+    "moss_latency_ms": 0.61,
+    "evaluation_latency_ms": 1.19,
+    "total_latency_ms": 1.8,
+    "status": "APPROVED",
+    "approved_by": "SecOps_Lead",
+    "execution_result": "Authorized & dispatched file 'customer.csv' to 'external@gmail.com.' [Approved with note: Partner agreement verified.]."
+  },
+  {
+    "event_id": "evt_wthm7a8hf_mucxuoca",
+    "timestamp": 1790097532860,
+    "request": "Read the public product catalog.",
+    "proposed_action": {
+      "action": "read_data",
+      "tool": "catalog_reader",
+      "resource": "public_product_catalog.json",
+      "destination": null,
+      "user": "analyst_agent",
+      "context": "public_reference_query"
+    },
+    "retrieved_policies": [
+      {
+        "id": "POL-PUB-004",
+        "title": "Public Catalog & Read-Only Data Access Policy",
+        "description": "Public catalog data, published documentation, read-only listings, and non-sensitive reference materials can be read and inspected normally by standard automated agents.",
+        "rule": "IF resource_scope == PUBLIC AND action IN (read, get, list, search, inspect) THEN ALLOW",
+        "category": "ACCESS_CONTROL",
+        "sensitivity_level": "PUBLIC",
+        "relevance_score": 0.916,
+        "keywords": [
+          "public",
+          "read",
+          "catalog",
+          "products",
+          "documentation",
+          "list",
+          "search",
+          "inspect",
+          "open",
+          "view"
+        ]
+      },
+      {
+        "id": "POL-INFRA-003",
+        "title": "Production Resource Protection & Destructive Action Policy",
+        "description": "Production databases, clusters, compute resources, and live storage require elevated multi-party admin permissions for any destructive, dropping, truncation, or deletion operations.",
+        "rule": "IF resource_environment == PRODUCTION AND action IN (delete, drop, truncate, destroy, purge) AND permission < ELEVATED_ADMIN THEN BLOCK",
+        "category": "INFRASTRUCTURE_PROTECTION",
+        "sensitivity_level": "CRITICAL",
+        "relevance_score": 0.713,
+        "keywords": [
+          "delete",
+          "drop",
+          "production",
+          "prod",
+          "database",
+          "destroy",
+          "truncate",
+          "purge",
+          "cluster",
+          "destructive"
+        ]
+      },
+      {
+        "id": "POL-AMB-005",
+        "title": "Ambiguous Context & Fail-Closed Precautionary Policy",
+        "description": "Any proposed tool action targeting unclassified resources, unrecognized endpoints, or operating within ambiguous security context requires human supervisor approval before execution.",
+        "rule": "IF policy_match_confidence < THRESHOLD OR context == AMBIGUOUS THEN REQUIRE_APPROVAL",
+        "category": "PRECAUTIONARY_GUARD",
+        "sensitivity_level": "SENSITIVE",
+        "relevance_score": 0.713,
+        "keywords": [
+          "unknown",
+          "ambiguous",
+          "unclassified",
+          "unrecognized",
+          "override",
+          "custom",
+          "execute",
+          "eval"
+        ]
+      }
+    ],
+    "decision": "ALLOW",
+    "reason": "ALLOWED: Read action 'read_data' on 'public_product_catalog.json' complies with Policy POL-PUB-004. Caller identity verified with valid read permissions.",
+    "permission_result": {
+      "is_permitted": true,
+      "permission_level": "READ_RESTRICTED",
+      "required_level": "STANDARD_READ",
+      "role": "Agent Identity (analyst_agent)",
+      "user_id": "analyst_agent",
+      "notes": "Standard read-only or non-destructive access granted"
+    },
+    "moss_latency_ms": 0.92,
+    "evaluation_latency_ms": 1.73,
+    "total_latency_ms": 2.65,
+    "status": "EXECUTED",
+    "approved_by": null,
+    "execution_result": "Action 'read_data' executed successfully on 'public_product_catalog.json'."
+  },
+  {
+    "event_id": "evt_baseline_001",
+    "timestamp": 1790097343556,
+    "request": "Read the public product catalog.",
+    "proposed_action": {
+      "action": "read_data",
+      "tool": "catalog_reader",
+      "resource": "public_product_catalog.json",
+      "destination": null,
+      "user": "analyst_agent",
+      "context": "public_reference_query"
+    },
+    "retrieved_policies": [
+      {
+        "id": "POL-PUB-004",
+        "title": "Public Catalog & Read-Only Data Access Policy",
+        "description": "Public catalog data, published documentation, read-only listings can be read normally.",
+        "rule": "IF resource_scope == PUBLIC AND action IN (read, get, list) THEN ALLOW",
+        "category": "ACCESS_CONTROL",
+        "sensitivity_level": "PUBLIC",
+        "relevance_score": 0.96
+      }
+    ],
+    "decision": "ALLOW",
+    "reason": "ALLOWED: Read action 'read_data' on 'public_product_catalog.json' complies with Policy POL-PUB-004.",
+    "permission_result": {
+      "is_permitted": true,
+      "permission_level": "STANDARD_DEV",
+      "required_level": "STANDARD_READ",
+      "role": "Agent Identity (analyst_agent)",
+      "user_id": "analyst_agent",
+      "notes": "Standard read-only or non-destructive access granted"
+    },
+    "moss_latency_ms": 8.42,
+    "evaluation_latency_ms": 0.85,
+    "total_latency_ms": 9.27,
+    "status": "EXECUTED",
+    "approved_by": null,
+    "execution_result": "Action 'read_data' executed successfully on 'public_product_catalog.json'."
+  },
+  {
+    "event_id": "evt_baseline_002",
+    "timestamp": 1790097428556,
+    "request": "Send customer.csv to external@gmail.com.",
+    "proposed_action": {
+      "action": "send_file",
+      "tool": "file_transfer_gateway",
+      "resource": "customer.csv",
+      "destination": "external@gmail.com",
+      "user": "analyst_agent",
+      "context": "external_data_dispatch"
+    },
+    "retrieved_policies": [
+      {
+        "id": "POL-PII-001",
+        "title": "Customer PII Classification Policy",
+        "description": "Customer PII is strictly classified as sensitive data.",
+        "rule": "IF resource CONTAINS (customer, pii) THEN CLASSIFY_AS SENSITIVE_DATA",
+        "category": "DATA_CLASSIFICATION",
+        "sensitivity_level": "SENSITIVE",
+        "relevance_score": 0.94
+      },
+      {
+        "id": "POL-DLP-002",
+        "title": "External Data Sharing & Exfiltration Prevention Policy",
+        "description": "Sensitive customer data cannot be transmitted externally without explicit approval.",
+        "rule": "IF data == SENSITIVE AND destination != INTERNAL THEN REQUIRE_APPROVAL",
+        "category": "DATA_LOSS_PREVENTION",
+        "sensitivity_level": "CRITICAL",
+        "relevance_score": 0.97
+      }
+    ],
+    "decision": "REQUIRE_APPROVAL",
+    "reason": "APPROVAL REQUIRED: Proposed transmission of sensitive data resource 'customer.csv' to external destination 'external@gmail.com' triggers Policy POL-PII-001 & POL-DLP-002.",
+    "permission_result": {
+      "is_permitted": false,
+      "permission_level": "STANDARD_DEV",
+      "required_level": "ELEVATED_DLP",
+      "role": "Agent Identity (analyst_agent)",
+      "user_id": "analyst_agent",
+      "notes": "Accessing sensitive customer records requires explicit DLP clearance"
+    },
+    "moss_latency_ms": 11.24,
+    "evaluation_latency_ms": 1.12,
+    "total_latency_ms": 12.36,
+    "status": "PENDING_APPROVAL",
+    "approved_by": null,
+    "execution_result": null
+  },
+  {
+    "event_id": "evt_baseline_003",
+    "timestamp": 1790097491556,
+    "request": "Delete the production database.",
+    "proposed_action": {
+      "action": "delete_database",
+      "tool": "database_admin_client",
+      "resource": "production_primary_db",
+      "destination": null,
+      "user": "developer",
+      "context": "destructive_maintenance"
+    },
+    "retrieved_policies": [
+      {
+        "id": "POL-INFRA-003",
+        "title": "Production Resource Protection & Destructive Action Policy",
+        "description": "Production databases, clusters require elevated multi-party admin permissions for any destructive actions.",
+        "rule": "IF resource == PRODUCTION AND action == DESTRUCTIVE AND permission < ELEVATED_ADMIN THEN BLOCK",
+        "category": "INFRASTRUCTURE_PROTECTION",
+        "sensitivity_level": "CRITICAL",
+        "relevance_score": 0.98
+      }
+    ],
+    "decision": "BLOCK",
+    "reason": "BLOCKED: Destructive action 'delete_database' on production resource 'production_primary_db' violates Policy POL-INFRA-003. User 'developer' lacks required privilege 'ELEVATED_ADMIN'.",
+    "permission_result": {
+      "is_permitted": false,
+      "permission_level": "STANDARD_DEV",
+      "required_level": "ELEVATED_ADMIN",
+      "role": "Agent Identity (developer)",
+      "user_id": "developer",
+      "notes": "Destructive production database operations require ELEVATED_ADMIN privilege"
+    },
+    "moss_latency_ms": 7.91,
+    "evaluation_latency_ms": 0.74,
+    "total_latency_ms": 8.65,
+    "status": "BLOCKED",
+    "approved_by": null,
+    "execution_result": null
+  }
+]

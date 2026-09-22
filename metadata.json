@@ -1,0 +1,6 @@
+{
+  "name": "GuardMoss",
+  "description": "Real-Time Security Gateway for AI Agents using Moss semantic retrieval and deterministic guardrails",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

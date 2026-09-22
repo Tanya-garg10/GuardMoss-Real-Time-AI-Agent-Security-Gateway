@@ -147,3 +147,53 @@ In the GuardMoss Dashboard:
    - **Result**: `BLOCK`. Shows production infrastructure policy violation and privilege denial. Execution is completely stopped.
 
 The dashboard provides real-time monitoring of all security events, showing latency metrics, policy matches, and audit trails for every intercepted action.
+
+---
+
+## 📊 Key Features
+
+- **Ultra-Low Latency**: Security decisions in <20ms with local Moss semantic retrieval
+- **Deterministic Security**: No LLM involvement in security decisions - impossible to jailbreak
+- **Real-Time Dashboard**: Live monitoring of all security events and system metrics
+- **Full Audit Trail**: Every action logged with timestamps, policies, and decisions
+- **Voice AI Support**: LiveKit integration for real-time voice agent security
+- **Flexible Deployment**: Run as standalone Node.js app or Python FastAPI backend
+
+---
+
+## 🔒 Security Philosophy
+
+GuardMoss follows a defense-in-depth approach:
+
+1. **Interception Layer**: All tool actions must pass through the security gateway
+2. **Semantic Retrieval**: Moss retrieves relevant policies based on action context
+3. **Deterministic Rules**: Security decisions follow strict, unchangeable rules
+4. **Human-in-the-Loop**: Risky actions require explicit approval
+5. **Complete Auditability**: Every decision is logged and traceable
+
+---
+
+## 📝 License
+
+This project is provided as-is for educational and research purposes.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please ensure:
+
+- All security decisions remain deterministic
+- LLM involvement is limited to action proposal only
+- Latency targets are maintained (<20ms for security evaluation)
+- Documentation is updated for new features
+
+---
+
+## 📞 Support
+
+For questions, issues, or feature requests, please open an issue on the GitHub repository.
+
+---
+
+**GuardMoss — Secure AI Agents, Real-Time Protection** ⚡

@@ -11,11 +11,34 @@
 * **LiveKit Voice Agent & Session**: Supports real-time Voice AI where Moss pairs persistent security policies (`alpha=0.8`) with a per-call session index (`moss_session.add_docs` and `moss_session.query`), guaranteeing sub-10ms conversational recall and zero cloud round-trips.
 * **Moss Semantic Retrieval**: Constructs a compact semantic tuple (`user`, `action`, `tool`, `resource`, `destination`, `context`) to retrieve granular security policies with sub-20ms latency.
 * **The LLM Never Decides Security**: While Gemini proposes tool actions based on user prompts, the final security decision is strictly deterministic and un-jailbreakable.
+* **Modern React Dashboard**: Built with React 19, Vite, TypeScript, and Tailwind CSS 4 for a responsive, high-performance security console.
 * **Three Tested Demo Scenarios**:
   1. **ALLOW**: *"Read the public product catalog."* $\rightarrow$ Read permitted under Public Access Policy.
   2. **REQUIRE APPROVAL**: *"Send customer.csv to external@gmail.com."* $\rightarrow$ Flags Sensitive Data & DLP policies; halts execution until authorized.
   3. **BLOCK**: *"Delete the production database."* $\rightarrow$ Flags Production Resource Policy & insufficient privileges; permanently blocks execution.
 * **Full Auditability**: Every single intercepted event records exact millisecond latency, policy matches, identity, and final resolution.
+
+---
+
+## 🛠️ Tech Stack
+
+**Frontend:**
+- React 19 with TypeScript
+- Vite 8 for fast development and optimized builds
+- Tailwind CSS 4 for modern styling
+- Lucide React for icons
+- Motion for smooth animations
+
+**Backend:**
+- Express.js with TypeScript
+- FastAPI (Python alternative available)
+- Google Gemini AI for agent actions
+- In-memory storage with JSON files
+
+**Security:**
+- Deterministic guardrail engine
+- Moss semantic retrieval (local or cloud)
+- Real-time policy evaluation
 
 ---
 
@@ -39,7 +62,7 @@ flowchart LR
 ## 📦 Monorepo Structure
 
 ```text
-├── backend/                  # Python FastAPI Backend
+├── backend/                  # Python Backend (Alternative deployment option)
 │   ├── agent.py              # Gemini-powered tool proposer
 │   ├── guardrails.py         # Deterministic guardrail engine
 │   ├── main.py               # FastAPI application & REST endpoints
@@ -47,14 +70,22 @@ flowchart LR
 │   ├── moss.py               # Dedicated Moss semantic retrieval service
 │   ├── requirements.txt      # Python dependencies
 │   └── storage.py            # SQLite audit log storage
+├── data/                     # Sample data and event logs
 ├── docs/                     # Documentation & Architecture
 │   ├── architecture.md       # Detailed architectural design & flow
 │   └── api.md                # REST API specifications
-├── src/                      # Next.js / React Modern Security Dashboard
+├── src/                      # React + Vite Modern Security Dashboard
 │   ├── components/           # UI components (Trace, ProposedCard, Metrics, etc.)
+│   ├── server/               # Server-side services (agent, guardrails, moss, storage)
 │   ├── App.tsx               # Main dashboard experience
+│   ├── index.css             # Global styles
+│   ├── main.tsx              # React entry point
 │   └── types.ts              # TypeScript interfaces
-├── server.ts                 # Full-stack Node/Express + Vite integration runtime
+├── server.ts                 # Express + Vite integration server
+├── index.html                # HTML entry point
+├── package.json              # Node.js dependencies and scripts
+├── tsconfig.json             # TypeScript configuration
+├── vite.config.ts            # Vite build configuration
 ├── .env.example              # Environment variables template
 └── README.md                 # Project README
 ```
@@ -91,7 +122,7 @@ npm run dev
 
 Visit: `http://localhost:3000`
 
-### Option B: Run Python FastAPI Backend
+### Option B: Run Python FastAPI Backend (Alternative)
 
 ```bash
 cd backend
@@ -114,3 +145,5 @@ In the GuardMoss Dashboard:
 3. **Scenario 3 — BLOCK**
    - Click the *"Delete Prod DB"* button or type: `"Delete the production database."`
    - **Result**: `BLOCK`. Shows production infrastructure policy violation and privilege denial. Execution is completely stopped.
+
+The dashboard provides real-time monitoring of all security events, showing latency metrics, policy matches, and audit trails for every intercepted action.

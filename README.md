@@ -3,8 +3,6 @@
 > **Intercept, Retrieve, Decide, Protect.**
 > GuardMoss is an inline security gateway that intercepts every proposed AI-agent tool action before execution. It uses **Moss semantic retrieval** to retrieve relevant security policies with ultra-low latency (<20ms) and applies a **deterministic guardrail engine** to decide: **ALLOW**, **REQUIRE APPROVAL**, or **BLOCK**.
 
----
-
 ## 🚀 Key Highlights
 
 * **Real-Time Execution Path**: Sits directly between the AI Agent and physical execution.
@@ -17,8 +15,6 @@
   2. **REQUIRE APPROVAL**: *"Send customer.csv to external@gmail.com."* $\rightarrow$ Flags Sensitive Data & DLP policies; halts execution until authorized.
   3. **BLOCK**: *"Delete the production database."* $\rightarrow$ Flags Production Resource Policy & insufficient privileges; permanently blocks execution.
 * **Full Auditability**: Every single intercepted event records exact millisecond latency, policy matches, identity, and final resolution.
-
----
 
 ## 🛠️ Tech Stack
 
@@ -40,8 +36,6 @@
 - Moss semantic retrieval (local or cloud)
 - Real-time policy evaluation
 
----
-
 ## 🏛️ Architecture
 
 ```mermaid
@@ -56,8 +50,6 @@ flowchart LR
     Decision --> Execution["Tool Execution"]
     Decision --> Audit["Audit Log (SQLite)"]
 ```
-
----
 
 ## 📦 Monorepo Structure
 
@@ -90,8 +82,6 @@ flowchart LR
 └── README.md                 # Project README
 ```
 
----
-
 ## ⚙️ Environment Variables
 
 Copy `.env.example` to `.env`:
@@ -111,8 +101,6 @@ MOSS_TIMEOUT_MS="250"
 ```
 
 *Note: If `MOSS_API_KEY` is omitted, GuardMoss automatically engages its high-speed local Moss semantic engine, guaranteeing genuine latency measurements without network dependencies.*
-
----
 
 ## 🛠️ Local Development
 
@@ -244,8 +232,6 @@ In the GuardMoss Dashboard:
 
 The dashboard provides real-time monitoring of all security events, showing latency metrics, policy matches, and audit trails for every intercepted action.
 
----
-
 ## 📊 Key Features
 
 - **Ultra-Low Latency**: Security decisions in <20ms with local Moss semantic retrieval
@@ -254,8 +240,6 @@ The dashboard provides real-time monitoring of all security events, showing late
 - **Full Audit Trail**: Every action logged with timestamps, policies, and decisions
 - **Voice AI Support**: LiveKit integration for real-time voice agent security
 - **Flexible Deployment**: Run as standalone Node.js app or Python FastAPI backend
-
----
 
 ## 🔒 Security Philosophy
 
@@ -267,13 +251,9 @@ GuardMoss follows a defense-in-depth approach:
 4. **Human-in-the-Loop**: Risky actions require explicit approval
 5. **Complete Auditability**: Every decision is logged and traceable
 
----
-
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
 
 ## 🤝 Contributing
 
@@ -284,12 +264,8 @@ Contributions are welcome! Please ensure:
 - Latency targets are maintained (<20ms for security evaluation)
 - Documentation is updated for new features
 
----
-
 ## 📞 Support
 
 For questions, issues, or feature requests, please open an issue on the GitHub repository.
-
----
 
 **GuardMoss — Secure AI Agents, Real-Time Protection** ⚡
